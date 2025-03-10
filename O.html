@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function redirect() {
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const urlParams = new URLSearchParams(window.location.search);
+            const androidPackage = urlParams.get('android_package');
+            const iosStoreId = urlParams.get('ios_store_id');
+
+            // Android逻辑：尝试启动App，失败则跳转官网
+            if (isAndroid && androidPackage) {
+                window.location.href = `intent://#Intent;package=${androidPackage};end`;
+                setTimeout(() => {
+                    window.location.href = 'https://ys.mihoyo.com/';
+                }, 2000); // 2秒后若未启动App则跳转下载页
+            }
+            // iOS逻辑：直接跳转App Store
+            else if (isIOS && iosStoreId) {
+                window.location.href = `https://apps.apple.com/app/id${iosStoreId}`;
+            }
+            // 其他情况跳转默认页面
+            else {
+                window.location.href = 'https://genshin.hoyoverse.com/';
+            }
+        }
+    </script>
+</head>
+<body onload="redirect()">
+</body>
+</html>
